@@ -6,6 +6,8 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField]
     private DamageType type;
+    
+    public float force;
 
     [SerializeField]
     private float damagePts;
@@ -17,6 +19,7 @@ public class Projectile : MonoBehaviour
 
     private Vector3 targetLocation;
     private Vector3 initialLocation;
+    public Rigidbody rb;
 
     public DamageType Type
     {
@@ -36,8 +39,10 @@ public class Projectile : MonoBehaviour
 
     public void Start()
     {
+        Debug.Log(type);
         initialLocation = transform.position;
-
+        rb.AddForce(transform.right * force*3, ForceMode.Impulse);
+        rb.AddForce(transform.up * force, ForceMode.Impulse);
         if (GameController.Instance != null)
         {
             targetLocation = GameController.Instance.TargetLocation;
@@ -53,5 +58,20 @@ public class Projectile : MonoBehaviour
     private void AutoDestroy()
     {
         Destroy(gameObject);
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "barrier")
+        {
+            Debug.Log("me choque con: " + collision.gameObject.name);
+            collision.gameObject.GetComponent<Barrier>().TakeDamage(this);
+            Destroy(this.gameObject);
+        }
+        if (collision.gameObject.tag == "base")
+        {
+            Debug.Log("me choque con: " + collision.gameObject.name);
+            collision.gameObject.GetComponent<Base>().TakeDamage(this);
+            Destroy(this.gameObject);
+        }
     }
 }

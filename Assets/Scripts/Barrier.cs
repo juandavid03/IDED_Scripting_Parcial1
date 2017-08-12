@@ -8,8 +8,9 @@ public class Barrier : MonoBehaviour
     private DamageType type;
 
     [SerializeField]
-    private float maxHp;
+    private float maxHp = 2;
 
+    [SerializeField]
     private float currentHP;
 
     public float CurrentHP
@@ -27,10 +28,25 @@ public class Barrier : MonoBehaviour
 
     public void TakeDamage(RayBeam ray)
     {
+        currentHP -= ray.DamagePts;
+        Debug.Log("ME DAÑE WEY, por: " +ray.DamagePts);
     }
 
     public void TakeDamage(Projectile projectile)
     {
+        if (projectile.Type == DamageType.Normal)
+        {
+            currentHP -= projectile.DamagePts;
+        }
+        if (projectile.Type == DamageType.Medium)
+        {
+            currentHP -= projectile.DamagePts + (projectile.DamagePts * 0.05f);
+        }
+        if (projectile.Type == DamageType.Heavy)
+        {
+            currentHP -= projectile.DamagePts + (projectile.DamagePts * 0.1f);
+        }
+        Debug.Log("ME DAÑE WEY, por: " + projectile.DamagePts);
     }
 
     // Use this for initialization
@@ -38,4 +54,14 @@ public class Barrier : MonoBehaviour
     {
         currentHP = maxHp;
     }
+
+    private void Update()
+    {
+        if (currentHP <= 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+
 }

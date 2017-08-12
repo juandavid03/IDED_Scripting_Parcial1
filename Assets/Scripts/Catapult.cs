@@ -10,5 +10,7 @@ public class Catapult : MonoBehaviour
 
     public void Fire()
     {
+        Instantiate(projectileToFire, projectileSpawnTranform);
+
     }
 }

@@ -2,6 +2,7 @@
 
 public class RayBeam : MonoBehaviour
 {
+    private GameController gc;
     [SerializeField]
     private float damage;
 
@@ -11,6 +12,11 @@ public class RayBeam : MonoBehaviour
     public Vector3 targetLocation;
     private Vector3 targetDirection;
 
+    private void Awake()
+    {
+        gc = GameObject.Find("Main Camera").GetComponent<GameController>();
+        targetDirection = gc.targetDirection;
+    }
     public float DamagePts
     {
         get
@@ -21,6 +27,12 @@ public class RayBeam : MonoBehaviour
 
     public void Fire()
     {
+        RaycastHit hit;
+
+        if (Physics.Raycast(targetLocation, targetDirection, out hit))
+        {
+            Debug.Log("le pegue a: " + hit.collider.name);
+        }
     }
 
     private void OnDrawGizmos()
